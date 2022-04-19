@@ -66,8 +66,8 @@ export const TEST_COMMAND = {
   type: 1,
 };
 
-export const YT_COMMAND = {
-  name:'yt',
+export const PLAY_COMMAND = {
+  name:'play',
   description: 'Search on Youtube',
   type:1,
   options: [
