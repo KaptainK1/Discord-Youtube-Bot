@@ -1,14 +1,17 @@
+import { queue, add, remove} from './queue.js';
+import { newError } from './error.js';
+import { newVideo } from './video.js';
+
+const Discord = require('discord.js');
+
+const client = new Discord.Client();
+
+client.once('ready', () =>{
+    console.log("bot is ready");
+});
 
 
-// export async function getVideo(search){
 
-//     const url = "https://www.googleapis.com/youtube/v3/{search}";
-//     await fetch(url)
-//     .then(response => response.json())
-//     .then(data => console.log(data));
 
-//     console.log(data);
 
-//     return data[0];
-
-// }
+client.login('OTY0OTE0MzAwNjg0NzUwODQ4.YlrkeA.Jmh25vtsymSJZVDmNebYLGdx9pI');

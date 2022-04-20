@@ -60,11 +60,11 @@ export async function InstallGuildCommand(appId, guildId, command) {
 // }
 
 // Simple test command
-export const TEST_COMMAND = {
-  name: 'test',
-  description: 'Basic guild command',
-  type: 1,
-};
+// export const TEST_COMMAND = {
+//   name: 'test',
+//   description: 'Basic guild command',
+//   type: 1,
+// };
 
 export const PLAY_COMMAND = {
   name:'play',

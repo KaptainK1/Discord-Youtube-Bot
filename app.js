@@ -9,7 +9,6 @@ import {
 } from 'discord-interactions';
 import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, getVideo, execute, loadClient } from './utils.js';
 import {
-  TEST_COMMAND,
   HasGuildCommands,
   PLAY_COMMAND,
 } from './commands.js';
@@ -19,8 +18,7 @@ const app = express();
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
-// Store for in-progress games. In production, you'd want to use a DB
-const activeGames = {};
+
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -45,18 +43,6 @@ app.post('/interactions', async function (req, res) {
     const opts = data.options[0];
     const value = opts.value;
 
-    // "test" guild command
-    if (name === 'test') {
-      // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          // Fetches a random emoji to send from a helper function
-          content: 'hello world ' + getRandomEmoji(),
-        },
-      });
-    }
-
     if (name === 'play') {
       console.log(data);
       
@@ -80,6 +66,7 @@ app.post('/interactions', async function (req, res) {
         data: {
           // content: 'you searched for: ' + value,
           content: "https://www.youtube.com/watch?v=" + youtube_id,
+
         },
       });
     }

@@ -10,12 +10,16 @@
   "author": "Shay DeWael",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/opus": "^0.7.0",
     "discord-interactions": "^3.2.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "ffmpeg-static": "^5.0.0",
     "google-auth-library": "^7.14.1",
     "googleapis": "^100.0.0",
-    "node-fetch": "^3.2.3"
+    "node-fetch": "^3.2.3",
+    "yt-search": "^2.10.3",
+    "ytdl-core": "^4.11.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
