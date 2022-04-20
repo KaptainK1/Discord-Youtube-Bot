@@ -1,5 +1,5 @@
 // import { getRPSChoices } from './game.js';
-import { capitalize, DiscordRequest } from './utils.js';
+import { DiscordRequest } from './utils.js';
 // import { getVideo } from './video_player.js';
 
 export async function HasGuildCommands(appId, guildId, commands) {

@@ -2,6 +2,8 @@ import 'dotenv/config';
 import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
 
+const BASE_URL = 'https://discord.com/api';
+
 export function VerifyDiscordRequest(clientKey) {
   return function (req, res, buf, encoding) {
     const signature = req.get('X-Signature-Ed25519');
@@ -54,7 +56,6 @@ export async function getVideo(search){
     console.log(res.status);
     throw new Error(JSON.stringify(data));
   }
-  // console.log(res);
   return res.json();
 }
 

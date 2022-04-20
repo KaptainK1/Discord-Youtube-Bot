@@ -7,7 +7,7 @@ import {
   MessageComponentTypes,
   ButtonStyleTypes,
 } from 'discord-interactions';
-import { VerifyDiscordRequest, getRandomEmoji, DiscordRequest, getVideo, execute, loadClient } from './utils.js';
+import { VerifyDiscordRequest, DiscordRequest, getVideo } from './utils.js';
 import {
   HasGuildCommands,
   PLAY_COMMAND,
@@ -25,7 +25,7 @@ app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
  */
 app.post('/interactions', async function (req, res) {
   // Interaction type and data
-  const { type, id, data } = req.body;
+  const { type, id, data, member, channel_id } = req.body;
 
   /**
    * Handle verification requests
@@ -43,6 +43,9 @@ app.post('/interactions', async function (req, res) {
     const opts = data.options[0];
     const value = opts.value;
 
+    console.log(req.body);
+    console.log(member);
+
     if (name === 'play') {
       console.log(data);
       
@@ -59,6 +62,12 @@ app.post('/interactions', async function (req, res) {
       } else {
         console.log("error with video")
       }
+
+      const channelURL = `channels/${channel_id}`;
+      const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
+      const channel = await channelRequest.json();
+
+      console.log(channel);
 
       // Send a message into the channel where command was triggered from
       return res.send({
@@ -88,7 +97,6 @@ app.listen(3000, () => {
 
   // Check if guild commands from commands.json are installed (if not, install them)
   HasGuildCommands(process.env.APP_ID, process.env.GUILD_ID, [
-    TEST_COMMAND,
     PLAY_COMMAND
   ]);
 });

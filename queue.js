@@ -1,6 +1,6 @@
 import { newError } from './error.js';
 
-export let queue = [];
+export const queue = [];
 
 export function add(video){
     if(video != null){

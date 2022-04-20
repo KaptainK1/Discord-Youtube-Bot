@@ -1,4 +1,4 @@
-let errorMessage = new Object();
+const errorMessage = new Object();
 
 export function newError(message){
     errorMessage.error=message;

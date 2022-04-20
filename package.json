@@ -12,6 +12,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
     "discord-interactions": "^3.2.0",
+    "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "ffmpeg-static": "^5.0.0",
