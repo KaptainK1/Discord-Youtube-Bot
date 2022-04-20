@@ -1,6 +1,7 @@
 import { queue, add, remove} from './queue.js';
 import { newError } from './error.js';
 import { newVideo } from './video.js';
+import 'dotenv/config';
 
 const Discord = require('discord.js');
 
@@ -14,4 +15,4 @@ client.once('ready', () =>{
 
 
 
-client.login('OTY0OTE0MzAwNjg0NzUwODQ4.YlrkeA.Jmh25vtsymSJZVDmNebYLGdx9pI');
+client.login(process.env.DISCORD_TOKEN);
