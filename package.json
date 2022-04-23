@@ -10,8 +10,12 @@
   "author": "Shay DeWael",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/builders": "^0.13.0",
     "@discordjs/opus": "^0.7.0",
+    "@discordjs/rest": "^0.4.1",
+    "@discordjs/voice": "^0.9.0",
     "discord-interactions": "^3.2.0",
+    "discord-player": "^5.2.2",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

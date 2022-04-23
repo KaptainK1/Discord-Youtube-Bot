@@ -13,6 +13,24 @@ import {
   PLAY_COMMAND,
 } from './commands.js';
 
+import { Player } from 'discord-player';
+import { Client, Intents } from 'discord.js';
+
+// const { Client, Intents } = require("discord.js");
+// const { REST } = require("@discordjs/rest");
+// const { Routes } = require("discord-api-types/v9");
+// const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
+// const { Player } = require("discord-player");
+// const fs = require("fs");
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
+
+const player = new Player(client);
+
+// add the trackStart event so when a song will be played this message will be sent
+player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
+
+
+
 // Create an express app
 const app = express();
 // Parse request body and verifies incoming requests using discord-interactions package
@@ -39,12 +57,16 @@ app.post('/interactions', async function (req, res) {
    * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
    */
   if (type === InteractionType.APPLICATION_COMMAND) {
-    const { name } = data;
+    const { name, guild_id } = data;
     const opts = data.options[0];
     const value = opts.value;
 
     console.log(req.body);
     console.log(member);
+
+    const user_id = member.user.id;
+    console.log(user_id);
+    console.log(guild_id);
 
     if (name === 'play') {
       console.log(data);
@@ -66,6 +88,14 @@ app.post('/interactions', async function (req, res) {
       const channelURL = `channels/${channel_id}`;
       const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
       const channel = await channelRequest.json();
+
+      //move member
+      const moveMemberURL = `guilds/${guild_id}/members/${user_id}`;
+      const moveMemberRequest = await DiscordRequest(moveMemberURL, {method: 'PATCH', body: {channel_id: '966438927634419782'}});
+      const moveMemberResult = await moveMemberRequest.json();
+
+      console.log(moveMemberResult);
+      // console.log(moveMemberURL)
 
       console.log(channel);
 
@@ -90,6 +120,10 @@ app.post('/interactions', async function (req, res) {
     // custom_id set in payload when sending message component
     const componentId = data.custom_id;
   }
+});
+
+client.once("ready", () => {
+  console.log("I'm ready !");
 });
 
 app.listen(3000, () => {

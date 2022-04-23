@@ -2,7 +2,6 @@ import 'dotenv/config';
 import fetch from 'node-fetch';
 import { verifyKey } from 'discord-interactions';
 
-const BASE_URL = 'https://discord.com/api';
 
 export function VerifyDiscordRequest(clientKey) {
   return function (req, res, buf, encoding) {
@@ -21,8 +20,10 @@ export async function DiscordRequest(endpoint, options) {
   // append endpoint to root API URL
   const url = 'https://discord.com/api/v9/' + endpoint;
   console.log(endpoint)
+  console.log(options);
   // Stringify payloads
   if (options.body) options.body = JSON.stringify(options.body);
+  console.log(options.body);
   // Use node-fetch to make requests
   const res = await fetch(url, {
     headers: {
@@ -58,57 +59,3 @@ export async function getVideo(search){
   }
   return res.json();
 }
-
-// export async function getVideo(search){
-//   console.log("you searched for: " + search);
-//   const baseURL = "https://www.googleapis.com/youtube/v3/search?";
-//   const params = "part=snippet&type=video&maxResults=1"
-//   const key = "&key=" + process.env.YOUTUBE_KEY;
-//   const query = "&q=" + search;
-//   const url = baseURL + params + key + query;
-//   //const url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&key=" + process.env.YOUTUBE_KEY + "&q=" + search;
-//   const response = await fetch(url)
-//   .then(res => {
-//     if(res.ok){
-//       return res.json()
-//     } else {
-//       console.log("Error calling youtube api" + res.err)
-//     }
-//   })
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => console.warn(error));
-//   console.log(response);
-//   return response;
-// }
-
-//youtube functions
-// export function authenticate() {
-//   return gapi.auth2.getAuthInstance()
-//       .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
-//       .then(function() { console.log("Sign-in successful"); },
-//             function(err) { console.error("Error signing in", err); });
-// }
-// export function loadClient() {
-//   gapi.client.setApiKey(process.env.YOUTUBE_KEY);
-//   return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-//       .then(function() { console.log("GAPI client loaded for API"); },
-//             function(err) { console.error("Error loading GAPI client for API", err); });
-// }
-// // Make sure the client is loaded and sign-in is complete before calling this method.
-// export function execute() {
-//   return gapi.client.youtube.search.list({
-//     "part": [
-//       "utxo bitcoin"
-//     ]
-//   })
-//       .then(function(response) {
-//               // Handle the results here (response.result has the parsed body).
-//               console.log("Response", response);
-//             },
-//             function(err) { console.error("Execute error", err); });
-// }
-// gapi.load("client:auth2", function() {
-//   gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
-// });
