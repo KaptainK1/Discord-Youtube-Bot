@@ -24,7 +24,7 @@ import { Client, Intents } from 'discord.js';
 // const fs = require("fs");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 
-const player = new Player(client);
+//const player = new Player(client);
 
 // add the trackStart event so when a song will be played this message will be sent
 player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
@@ -33,10 +33,9 @@ player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | No
 
 // Create an express app
 const app = express();
+const player = new Player(app);
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
-
-
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -122,9 +121,9 @@ app.post('/interactions', async function (req, res) {
   }
 });
 
-client.once("ready", () => {
-  console.log("I'm ready !");
-});
+// client.once("ready", () => {
+//   console.log("I'm ready !");
+// });
 
 app.listen(3000, () => {
   console.log('Listening on port 3000');
