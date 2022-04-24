@@ -7,7 +7,7 @@ import {
   MessageComponentTypes,
   ButtonStyleTypes,
 } from 'discord-interactions';
-import { VerifyDiscordRequest, DiscordRequest, getVideo } from './utils.js';
+import { VerifyDiscordRequest, DiscordRequest, getVideo, GetChannels } from './utils.js';
 import {
   HasGuildCommands,
   PLAY_COMMAND,
@@ -84,13 +84,21 @@ app.post('/interactions', async function (req, res) {
         console.log("error with video")
       }
 
-      const channelURL = `channels/${channel_id}`;
-      const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
-      const channel = await channelRequest.json();
+      // const channelURL = `channels/${channel_id}`;
+      // const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
+      // const channel = await channelRequest.json();
+      
+      const channelID = await GetChannels("music", guild_id);
+
+      if(channelID == null){
+        throw new Error("Channel name not found. exiting")
+      }
+      console.log(channelID);
+
 
       //move member
       const moveMemberURL = `guilds/${guild_id}/members/${user_id}`;
-      const moveMemberRequest = await DiscordRequest(moveMemberURL, {method: 'PATCH', body: {channel_id: '966438927634419782'}});
+      const moveMemberRequest = await DiscordRequest(moveMemberURL, {method: 'PATCH', body: {channel_id: channelID}});
       const moveMemberResult = await moveMemberRequest.json();
 
       console.log(moveMemberResult);
