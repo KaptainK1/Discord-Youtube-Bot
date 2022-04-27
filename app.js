@@ -7,14 +7,14 @@ import {
   MessageComponentTypes,
   ButtonStyleTypes,
 } from 'discord-interactions';
-import { VerifyDiscordRequest, DiscordRequest, getVideo, GetChannels } from './utils.js';
+import { VerifyDiscordRequest, DiscordRequest, getVideo, GetChannel, GetGuild } from './utils.js';
 import {
   HasGuildCommands,
   PLAY_COMMAND,
 } from './commands.js';
 
 import { Player } from 'discord-player';
-import { Client, Intents } from 'discord.js';
+import { Client, Intents, Interaction } from 'discord.js';
 
 // const { Client, Intents } = require("discord.js");
 // const { REST } = require("@discordjs/rest");
@@ -27,13 +27,14 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 //const player = new Player(client);
 
 // add the trackStart event so when a song will be played this message will be sent
-player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
+// player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
 
 
 
 // Create an express app
 const app = express();
-const player = new Player(app);
+const player = new Player(client);
+player.on("trackStart", (queue, track) => queue.metadata.channel.send(`🎶 | Now playing **${track.title}**!`))
 // Parse request body and verifies incoming requests using discord-interactions package
 app.use(express.json({ verify: VerifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
@@ -60,21 +61,29 @@ app.post('/interactions', async function (req, res) {
     const opts = data.options[0];
     const value = opts.value;
 
+    console.log("Request_Body:")
     console.log(req.body);
+
+    console.log("Member:")
     console.log(member);
 
     const user_id = member.user.id;
+    console.log("User ID:")
     console.log(user_id);
+    console.log("Guild ID:")
     console.log(guild_id);
 
     if (name === 'play') {
+      console.log("Search:")
       console.log(data);
       
       // const video = await getVideo(value);
       let video = await getVideo(value);
+      console.log("Youtube Video:")
        console.log(video)
 
        let youtube_id = video.items[0].id.videoId;
+       console.log("Youtube ID:")
       console.log(youtube_id);
 
       if(video != null){
@@ -88,23 +97,40 @@ app.post('/interactions', async function (req, res) {
       // const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
       // const channel = await channelRequest.json();
       
-      const channelID = await GetChannels("music", guild_id);
-
+      const channel = await GetChannel("music", guild_id);
+      const channelID = channel.id;
+      console.log(channelID);
       if(channelID == null){
         throw new Error("Channel name not found. exiting")
       }
-      console.log(channelID);
 
+      const guild = await GetGuild(guild_id);
+      console.log("Guild stringify:")
+      console.log(guild);
+      const guildObject = JSON.parse(`"${guild}"`);
+      console.log("Guild:")
+      console.log(guildObject);
 
-      //move member
-      const moveMemberURL = `guilds/${guild_id}/members/${user_id}`;
-      const moveMemberRequest = await DiscordRequest(moveMemberURL, {method: 'PATCH', body: {channel_id: channelID}});
-      const moveMemberResult = await moveMemberRequest.json();
+      const guildManager = client.guilds;
+      const newguild = await guildManager.fetch(guild_id)
+      console.log("new guild");
+      console.log(newguild);
+      //move member functionality if needed
+      // const moveMemberURL = `guilds/${guild_id}/members/${user_id}`;
+      // const moveMemberRequest = await DiscordRequest(moveMemberURL, {method: 'PATCH', body: {channel_id: channelID}});
+      // const moveMemberResult = await moveMemberRequest.json();
 
-      console.log(moveMemberResult);
-      // console.log(moveMemberURL)
+      //begin music player code
 
-      console.log(channel);
+      const query = `https://www.youtube.com/watch?v=${youtube_id}>`;
+      const queue = player.createQueue(newguild, {
+        metadata: {
+          channel: channel
+        }
+      });
+
+      console.log("Queue")
+      console.log(queue);
 
       // Send a message into the channel where command was triggered from
       return res.send({

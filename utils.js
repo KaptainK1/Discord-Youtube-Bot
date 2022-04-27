@@ -60,18 +60,27 @@ export async function getVideo(search){
   return res.json();
 }
 
-export async function GetChannels(channelName, guildID){
+export async function GetChannel(channelName, guildID){
 
   const channelURL = `guilds/${guildID}/channels`;
   const channelRequest = await DiscordRequest(channelURL, { method: 'GET' } );
   const channels = await channelRequest.json();
+  let _channel = null;
 
   channels.forEach(channel => {
+    // console.log(channel.name);
     if(channel.name === channelName){
-      return channel.id;
+      _channel = channel;
     }
   });
 
-  return null;
+  return _channel;
 
+}
+
+export async function GetGuild(guildID){
+  const guildURL = `guilds/${guildID}`;
+  const guildURequest = await DiscordRequest(guildURL, { method: 'GET' } );
+  const guild = await guildURequest.json();
+  return guild;
 }
