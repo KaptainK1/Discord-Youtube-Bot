@@ -14,7 +14,7 @@ import {
 } from './commands.js';
 
 import { Player } from 'discord-player';
-import { Client, Intents, Interaction } from 'discord.js';
+import { Client, Intents, Interaction, VoiceChannel } from 'discord.js';
 
 // const { Client, Intents } = require("discord.js");
 // const { REST } = require("@discordjs/rest");
@@ -131,28 +131,30 @@ app.post('/interactions', async function (req, res) {
       // const guildManager = client.guilds;
 
       //get the guild object which is needed for the queue
-      const newguild = await client.guilds.fetch(guild_id)
+      const newguild = await client.guilds.fetch(guild_id);
 
       //get the channel object which is needed for the queue
-      const newChannel = await client.channels.fetch(channelID);
+      const newChannel = await newguild.channels.fetch(channelID);
                           // .then(channel => console.log(channel.name))
                           // .catch(console.error);
-
-
-                          //start here need to debug the new channel, cant get channel members for some reason
-      console.log("channel member count");
-      console.log(newChannel.memberCount);
 
       console.log("channel members");
       // console.log(newChannel.members);
 
       // const channelMemebers = newChannel.members.forEach( x => console.log(x));
 
-      for (const [key, value] of newChannel.members.entries()){
-        console.log(key, value);
-      }
+      // for (const [memberID, member] of newChannel.members){
+      //   console.log(memberID, member);
+      // }
 
 
+      // let voiceStates = await newguild.voiceStates;
+      // console.log(voiceStates);
+
+      // const cMembers = newChannel.members;
+      // for (const [memberID, member] of cMembers){
+      //   console.log(memberID, member);
+      // }
 
       console.log("channels");
       console.log(newChannel);
@@ -173,19 +175,19 @@ app.post('/interactions', async function (req, res) {
       const query = `https://www.youtube.com/watch?v=${youtube_id}>`;
       const queue = player.createQueue(newguild, {
         metadata: {
-          channel: newChannel
+          channel: channel
         }
       });
 
       
       console.log(queue.toJSON());
-
+      console.log(channel);
 
 
       //get the connection to the voice channel
       try {
         console.log(queue.connection);
-        if(!queue.connection) await queue.connect(newChannel);
+        if(!queue.connection) await queue.connect();
 
       } catch {
 
