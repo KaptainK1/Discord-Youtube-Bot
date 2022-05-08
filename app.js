@@ -45,6 +45,9 @@ app.post('/interactions', async function (req, res) {
   // Interaction type and data
   const { type, id, data, member, channel_id } = req.body;
 
+  console.log("req body");
+  console.log(req.body);
+
   /**
    * Handle verification requests
    */
@@ -76,11 +79,13 @@ app.post('/interactions', async function (req, res) {
     if (name === 'play') {
       console.log("Search:")
       console.log(data);
+
+
       
       // const video = await getVideo(value);
       let video = await getVideo(value);
-      // console.log("Youtube Video:")
-      //  console.log(video)
+      console.log("Youtube Video:")
+       console.log(video)
 
        let youtube_id = video.items[0].id.videoId;
       //  console.log("Youtube ID:")
@@ -104,6 +109,17 @@ app.post('/interactions', async function (req, res) {
         throw new Error("Channel name not found. exiting")
       }
 
+      if ( channel_id !== channelID) {
+
+      // return res.send({
+      //   type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      //   data: {
+      //     // content: 'you searched for: ' + value,
+      //     content: `You are not in the music voice channel!`,
+      //   },
+      // });
+    }
+
       // const guild = await GetGuild(guild_id);
       // console.log("Guild stringify:")
       // console.log(guild);
@@ -122,8 +138,28 @@ app.post('/interactions', async function (req, res) {
                           // .then(channel => console.log(channel.name))
                           // .catch(console.error);
 
+
+                          //start here need to debug the new channel, cant get channel members for some reason
+      console.log("channel member count");
+      console.log(newChannel.memberCount);
+
+      console.log("channel members");
+      // console.log(newChannel.members);
+
+      // const channelMemebers = newChannel.members.forEach( x => console.log(x));
+
+      for (const [key, value] of newChannel.members.entries()){
+        console.log(key, value);
+      }
+
+
+
       console.log("channels");
       console.log(newChannel);
+
+      console.log("is voice channel?")
+      console.log(newChannel.isVoice());
+
       console.log("new guild");
       console.log(newguild);
 
@@ -141,8 +177,30 @@ app.post('/interactions', async function (req, res) {
         }
       });
 
-      console.log("Queue")
-      console.log(queue);
+      
+      console.log(queue.toJSON());
+
+
+
+      //get the connection to the voice channel
+      try {
+        console.log(queue.connection);
+        if(!queue.connection) await queue.connect(newChannel);
+
+      } catch {
+
+        //if cannot get the connection, destroy the queue object and return a message to the general chat
+        queue.destroy();
+        return res.send({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            // content: 'you searched for: ' + value,
+            content: `Could not join voice channel ${newChannel.name}!`,
+          },
+        });
+      }
+
+
 
       // Send a message into the channel where command was triggered from
       return res.send({
