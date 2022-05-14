@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { getVideo } = require('../GetYoutubeVideo.js');
 
 // const play_command = new SlashCommandBuilder()
 //         .setName("play")
@@ -19,6 +20,7 @@ module.exports = {
                     .setRequired(true)),
     async execute(interaction){
         console.log(interaction);
+        // let video = getVideo();
         await interaction.reply("Play test!")
     },
 };
