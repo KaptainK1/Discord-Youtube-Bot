@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
+// import fetch from 'node-fetch';
 require('dotenv').config();
 
-async function getVideo(search){
+module.exports = async(search) => {
     console.log("you searched for: " + search);
     const baseURL = "https://www.googleapis.com/youtube/v3/search?";
     const params = "part=snippet&type=video&maxResults=1"
@@ -17,4 +18,4 @@ async function getVideo(search){
       throw new Error(JSON.stringify(data));
     }
     return res.json();
-  }
+  };
