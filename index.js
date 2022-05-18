@@ -5,10 +5,17 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('node:fs');
 const path = require('node:path');
+const { Player } = require("discord-player");
 require('dotenv').config()
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
+const player = new Player(client);
+
+player.on("trackStart", (queue, track) => {
+	queue.metadata.channel.send(`now playing **${track.title}`);
+});
+
 const GUILD_ID = process.env.GUILD_ID;
 const APP_ID = process.env.APP_ID;
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
@@ -46,7 +53,7 @@ client.on('interactionCreate', async interaction => {
 	if(!command) return;
 
 	try {
-		await command.execute(interaction);
+		await command.execute(interaction, player);
 	} catch (error){
 		console.log(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
