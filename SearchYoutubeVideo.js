@@ -2,13 +2,13 @@ const fetch = require('node-fetch');
 // import fetch from 'node-fetch';
 require('dotenv').config();
 
-module.exports = async(videoID) => {
-    console.log("videoID: " + videoID);
-    const baseURL = "https://www.googleapis.com/youtube/v3/videos?";
-    const params = "part=contentDetails,id,player,recordingDetails,snippet"
-    const video_ID = `&id=${videoID}`;
+module.exports = async(search) => {
+    console.log("you searched for: " + search);
+    const baseURL = "https://www.googleapis.com/youtube/v3/search?";
+    const params = "part=snippet&type=video&maxResults=1"
     const key = "&key=" + process.env.YOUTUBE_KEY;
-    const url = baseURL + params + video_ID + key;
+    const query = "&q=" + search;
+    const url = baseURL + params + key + query;
     //const url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&key=" + process.env.YOUTUBE_KEY + "&q=" + search;
     const res = await fetch(url);
   

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const getVideo = require('../GetYoutubeVideo.js');
+const searchVideo = require('../SearchYoutubeVideo.js');
+const getVideo = require('../GetYoutubeVideo.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +13,33 @@ module.exports = {
     async execute(interaction, player){
         console.log(interaction);
         // console.log(interaction.options.getString('query'));
-        let video = await getVideo(interaction.options.getString('query'));
+        let video = await searchVideo(interaction.options.getString('query'));
+
+        console.log('video :>> ', video);
+
+        let videoID = video.items[0].id.videoId;
+        console.log('videoID :>> ', videoID);
+
+        //start here next time, need to parse through video object to get information
+        // newVideoID :>>  {
+        //     kind: 'youtube#videoListResponse',
+        //     etag: 'fPERZZqM-9koXePdgytqi_gWlk0',
+        //     items: [
+        //       {
+        //         kind: 'youtube#video',
+        //         etag: 'prkUebFlDG09R4m6jHUZBJSG1xo',
+        //         id: 'hKft6E4K8KY',
+        //         snippet: [Object],
+        //         contentDetails: [Object],
+        //         player: [Object],
+        //         recordingDetails: {}
+        //       }
+        //     ],
+        //     pageInfo: { totalResults: 1, resultsPerPage: 1 }
+        //   }
+          
+        let newVideoID = await getVideo(videoID);
+        console.log('newVideoID :>> ', newVideoID);
         let youtube_id = video.items[0].id.videoId;
         // await interaction.reply(`https://www.youtube.com/watch?v=${youtube_id}>`);
 

@@ -42,7 +42,7 @@ export async function DiscordRequest(endpoint, options) {
   return res;
 }
 
-export async function getVideo(search){
+export async function searchVideo(search){
   console.log("you searched for: " + search);
   const baseURL = "https://www.googleapis.com/youtube/v3/search?";
   const params = "part=snippet&type=video&maxResults=1"
@@ -59,6 +59,7 @@ export async function getVideo(search){
   }
   return res.json();
 }
+
 
 export async function GetChannel(channelName, guildID){
 
