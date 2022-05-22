@@ -5,7 +5,7 @@ require('dotenv').config();
 module.exports = async(videoID) => {
     console.log("videoID: " + videoID);
     const baseURL = "https://www.googleapis.com/youtube/v3/videos?";
-    const params = "part=contentDetails,id,player,recordingDetails,snippet"
+    const params = "part=contentDetails,id,player,statistics,snippet"
     const video_ID = `&id=${videoID}`;
     const key = "&key=" + process.env.YOUTUBE_KEY;
     const url = baseURL + params + video_ID + key;

@@ -14,39 +14,40 @@ module.exports = {
         console.log(interaction);
         // console.log(interaction.options.getString('query'));
         let video = await searchVideo(interaction.options.getString('query'));
-
         console.log('video :>> ', video);
 
         let videoID = video.items[0].id.videoId;
         console.log('videoID :>> ', videoID);
-
-        //start here next time, need to parse through video object to get information
-        // newVideoID :>>  {
-        //     kind: 'youtube#videoListResponse',
-        //     etag: 'fPERZZqM-9koXePdgytqi_gWlk0',
-        //     items: [
-        //       {
-        //         kind: 'youtube#video',
-        //         etag: 'prkUebFlDG09R4m6jHUZBJSG1xo',
-        //         id: 'hKft6E4K8KY',
-        //         snippet: [Object],
-        //         contentDetails: [Object],
-        //         player: [Object],
-        //         recordingDetails: {}
-        //       }
-        //     ],
-        //     pageInfo: { totalResults: 1, resultsPerPage: 1 }
-        //   }
           
-        let newVideoID = await getVideo(videoID);
-        console.log('newVideoID :>> ', newVideoID);
-        let youtube_id = video.items[0].id.videoId;
-        // await interaction.reply(`https://www.youtube.com/watch?v=${youtube_id}>`);
+        // let newVideoID = await getVideo(videoID);
+        // console.log('newVideoID :>> ', newVideoID);
+
+        // const { snippet, contentDetails, statistics} = newVideoID.items[0];
+        // const { title, description } = newVideoID.items[0].snippet.localized;
+        // const author = newVideoID.items[0].snippet.channelTitle;
+        // const url = `https://www.youtube.com/watch?v=${newVideoID.items[0].id}`;
+        // const thumbnail = newVideoID.items[0].snippet.thumbnails.default.url;
+        // const requestedBy = interaction.user;
+        // const { duration } = newVideoID.items[0].contentDetails;
+        // const { viewCount }= newVideoID.items[0].statistics;
+
+        let track = {};
+
+        //boolean to check if what the user entered was a url for the video
+        //otherwise consider what the user entered to be searched on yt
+        let isURL;
+
+        if(interaction.options.getString('query').startsWith('https://')){
+            isURL = true;
+        } else {
+            isURL = false;
+        }
 
         if (!interaction.member.voice.channelId) {
             return await interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         }
-        if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
+        if (interaction.guild.me.voice.channelId && 
+            interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
             return await interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
         }
         const query = interaction.options.getString('query');
@@ -56,7 +57,6 @@ module.exports = {
             }
         });
 
-
         // verify vc connection
         try {
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
@@ -65,10 +65,52 @@ module.exports = {
             return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
         }
 
+        //reply to the channel from which the command was sent
+        //use deferReply otherwise the reply might timeout
         await interaction.deferReply();
-        const track = await player.search(query, {
-            requestedBy: interaction.user
-        }).then(x => x.tracks[0]);
+
+        if(isURL){
+            
+            //since the user entered a url, query the video with the GetYoutubeVideo function
+            let newVideoID = await getVideo(videoID);
+
+            //from those results, build the track data
+            const { snippet, contentDetails, statistics} = newVideoID.items[0];
+            const { title, description } = newVideoID.items[0].snippet.localized;
+            const author = newVideoID.items[0].snippet.channelTitle;
+            const url = `https://www.youtube.com/watch?v=${newVideoID.items[0].id}`;
+            const thumbnail = newVideoID.items[0].snippet.thumbnails.default.url;
+            const requestedBy = interaction.user;
+            const { duration } = newVideoID.items[0].contentDetails;
+            const { viewCount }= newVideoID.items[0].statistics;
+
+            trackData = {
+                title: title,
+                description: description,
+                author: author,
+                url: url,
+                thumbnail: thumbnail,
+                duration: duration,
+                views: viewCount,
+                requestedBy: requestedBy
+            }
+
+            track = {
+                player: player,
+                data: trackData
+            }
+
+            console.log(track);
+        } else {
+            track = await player.search(query, {
+                requestedBy: interaction.user
+            }).then(x => x.tracks[0]);
+        }
+
+        // const track = await player.search(query, {
+        //     requestedBy: interaction.user
+        // }).then(x => x.tracks[0]);
+
         if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
 
         console.log(track);
