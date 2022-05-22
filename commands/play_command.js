@@ -69,7 +69,7 @@ module.exports = {
 
         //reply to the channel from which the command was sent
         //use deferReply otherwise the reply might timeout
-        await interaction.deferReply();
+
 
         // if(isURL){
             
@@ -97,6 +97,7 @@ module.exports = {
         //         requestedBy: requestedBy
         //     }
         // } else {
+        await interaction.deferReply();
             const track = await player.search(query, {
                 requestedBy: interaction.user
             }).then(x => x.tracks[0]);

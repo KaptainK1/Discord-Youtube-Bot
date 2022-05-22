@@ -6,11 +6,11 @@ const { Track } = require('discord-player');
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("jump")
-    .setDescription('jump to a particular track in the queue')
+    .setName("remove")
+    .setDescription('removes a particular track from the queue')
     .addStringOption(option =>
                     option.setName('track')
-                    .setDescription('Enter the track to jump to')
+                    .setDescription('Enter the track title to remove')
                     .setRequired(true)),
     async execute(interaction, player){
         console.log(interaction);
@@ -40,7 +40,7 @@ module.exports = {
 
         await interaction.deferReply();
         for(let i = 0; i < queue.tracks.length; i++){
-            if(queue.tracks[i].title === interaction.options.getString('track')){
+            if(queue.tracks[i].title === interaction.options.getString('track').toLowerCase()){
                 foundTrack = queue.tracks[i];
             }
         }
@@ -49,8 +49,8 @@ module.exports = {
             return await interaction.reply({ content: `Track ${interaction.options.getString('track')} not found!` });
         }
 
-        queue.jump(foundTrack);
-        return await interaction.reply({ content: `Jumping to Track ${interaction.options.getString('track')}!` });
+        queue.remove(foundTrack);
+        return await interaction.reply({ content: `removing ${interaction.options.getString('track')}!` });
 
     }
 };
