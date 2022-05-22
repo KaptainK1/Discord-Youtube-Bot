@@ -38,14 +38,14 @@ player.on("channelEmpty", (queue) => {
 //handle the event when the channel which the bot is connected to encounters a connection error
 player.on("connectionError", (queue, error) => {
 	console.log("Connection Error occured: ");
-	console.log(queue);
+	// console.log(queue);
 	console.log(error);
 });
 
 //handle the event when the channel which the bot is connected to encounters an error
 player.on("error", (queue, error) => {
 	console.log("Error occured: ");
-	console.log(queue);
+	// console.log(queue);
 	console.log(error);
 });
 
@@ -77,7 +77,7 @@ client.once('ready', () => {
 //so get the command name from the slash command the user entered and run that command
 //will have the same name as the command file in /commands
 client.on('interactionCreate', async interaction => {
-	console.log(interaction);
+	// console.log(interaction);
 	if (!interaction.isCommand()) return;
 
 	const command = client.commands.get(interaction.commandName);

@@ -13,13 +13,13 @@ module.exports = {
                     .setDescription('Enter your search')
                     .setRequired(true)),
     async execute(interaction, player){
-        console.log(interaction);
+        // console.log(interaction);
         // console.log(interaction.options.getString('query'));
-        let video = await searchVideo(interaction.options.getString('query'));
-        console.log('video :>> ', video);
+        // let video = await searchVideo(interaction.options.getString('query'));
+        // console.log('video :>> ', video);
 
-        let videoID = video.items[0].id.videoId;
-        console.log('videoID :>> ', videoID);
+        // let videoID = video.items[0].id.videoId;
+        // console.log('videoID :>> ', videoID);
           
         // let newVideoID = await getVideo(videoID);
         // console.log('newVideoID :>> ', newVideoID);
@@ -108,7 +108,7 @@ module.exports = {
 
         if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
 
-        console.log(track);
+        // console.log(track);
         queue.addTrack(track);
 
         //if the queue is not playing, then there are no tracks in the queue

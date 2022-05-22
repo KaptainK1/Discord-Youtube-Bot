@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("stop")
-    .setDescription('Stops the player and clears the queue'),
+    .setName("show")
+    .setDescription('show the current state of the queue'),
     async execute(interaction, player){
         console.log(interaction);
 
@@ -31,9 +31,6 @@ module.exports = {
             return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
         }
 
-        queue.clear();
-        queue.stop();
-
-        return await interaction.reply({ content: "Bot is stopped and queue is CLEARED"});
+        return await interaction.reply({ content: queue.toString()});
     }
 }
