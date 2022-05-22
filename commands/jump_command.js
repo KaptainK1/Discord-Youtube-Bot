@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const searchVideo = require('../SearchYoutubeVideo.js');
-const getVideo = require('../GetYoutubeVideo.js');
-const { Player } = require('discord-player');
-const { Track } = require('discord-player');
+// const searchVideo = require('../SearchYoutubeVideo.js');
+// const getVideo = require('../GetYoutubeVideo.js');
+// const { Player } = require('discord-player');
+// const { Track } = require('discord-player');
 
 module.exports = {
     data: new SlashCommandBuilder()
