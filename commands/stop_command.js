@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("stop")
-    .setDescription('Stop the current song'),
+    .setDescription('Stops the player and clears the queue'),
     async execute(interaction, player){
         console.log(interaction);
 
@@ -19,6 +19,10 @@ module.exports = {
         if(queue === null || queue === undefined){
             return await  interaction.reply({content: "Queue has not been created yet, use the /play command to get the party started!"});
         }
+
+        if (!queue.nowPlaying()) {
+            return await interaction.reply({ content: "Queue is not currently active", ephemeral: true });
+        }
         // verify vc connection
         try {
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
@@ -27,7 +31,8 @@ module.exports = {
             return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
         }
 
+        // queue.clear();
         queue.stop();
-        return await interaction.reply({ content: "Bot is stopped", ephemeral: true });
+        return await interaction.reply({ content: "Bot is stopped"});
     }
 }
