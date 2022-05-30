@@ -18,6 +18,9 @@ Such commands include:
 install Node.js v 18
 https://nodejs.org/en/
 
+install python
+https://www.python.org/downloads/
+
  clone or download this repo
  
  If you dont already have an application created in the Discord Developer Portal, do so here
@@ -31,6 +34,8 @@ Click on Rest Token and copy this value in a notepad for later use
 
 Create a file called .env in the root folder in the project
 in the .env file, create an entry called DISCORD_TOKEN=The Token You copied earlier
+
+Repeat this process for the APP_ID and GUILD_ID
 
 Add the bot to the discord server by going to the discord developer portal under OAuth2 and click URL Generator
 pick bot
